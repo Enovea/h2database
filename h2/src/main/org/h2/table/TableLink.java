@@ -319,8 +319,11 @@ public class TableLink extends Table {
     }
 
     private String convertColumnName(String columnName) {
-        if ((storesMixedCase || storesLowerCase) &&
-                columnName.equals(StringUtils.toLowerEnglish(columnName))) {
+        if(storesLowerCase && !storesMixedCaseQuoted) {
+            // MySQL on a case insensitive system
+            columnName = StringUtils.toUpperEnglish(columnName);
+        } else if (storesMixedCase
+                && columnName.equals(StringUtils.toLowerEnglish(columnName))) {
             columnName = StringUtils.toUpperEnglish(columnName);
         } else if (storesMixedCase && !supportsMixedCaseIdentifiers) {
             // TeraData
